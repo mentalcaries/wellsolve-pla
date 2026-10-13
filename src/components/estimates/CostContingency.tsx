@@ -1,0 +1,17 @@
+import { Plus, XCircle } from 'lucide-react';
+import { useEffect } from 'react';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import type { EstimatesFormValues } from './estimate-data';
+import { formatCurrency } from './formatting';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+
+export function CostContingency({ estimatesTotalCost, onExposureChange }: { estimatesTotalCost: number; onExposureChange: (value: number) => void }) {
+  const { control, setValue } = useFormContext<EstimatesFormValues>();
+  const { fields, append, remove } = useFieldArray({ control, name: 'costContingency' });
+  const items = useWatch({ control, name: 'costContingency' });
+  const totalExposure = items.reduce((sum, entry) => sum + entry.probability / 100 * entry.costImpact, 0);
+  useEffect(() => onExposureChange(totalExposure), [onExposureChange, totalExposure]);
+  return <div className='mt-10'><div className='my-3'><h2 className='text-lg font-semibold'>Cost Contingency Analysis</h2><p className='font-light'>Enter operational risks to assess cost exposure.</p></div><div className='pl-8'><Table className='table-fixed'><TableHeader><TableRow><TableHead className='w-[25%]'>Risk Description</TableHead><TableHead className='w-[12%]'>Probability (%)</TableHead><TableHead className='w-[18%]'>Cost Impact (USD)</TableHead><TableHead className='w-[15%] text-right'>Exposure (USD)</TableHead><TableHead className='w-[30%]'>Mitigations</TableHead></TableRow></TableHeader><TableBody>{fields.map((field,index) => { const entry=items[index]; const exposure=entry.probability/100*entry.costImpact; return <TableRow key={field.id} className='group'><TableCell className='relative'><button type='button' onClick={() => remove(index)} className='absolute -left-6 top-1/2 -translate-y-1/2 text-destructive opacity-0 group-hover:opacity-100'><XCircle className='h-5 w-5'/></button><Input value={entry.description} onChange={event => setValue(`costContingency.${index}.description`,event.target.value)}/></TableCell><TableCell><Input type='number' value={entry.probability} onChange={event => setValue(`costContingency.${index}.probability`,Number(event.target.value)||0)}/></TableCell><TableCell><Input type='number' value={entry.costImpact} onChange={event => setValue(`costContingency.${index}.costImpact`,Number(event.target.value)||0)}/></TableCell><TableCell className='text-right font-medium'>{formatCurrency(exposure)}</TableCell><TableCell><Input value={entry.mitigations} onChange={event => setValue(`costContingency.${index}.mitigations`,event.target.value)}/></TableCell></TableRow>})}</TableBody></Table></div><Button type='button' variant='outline' size='sm' className='mt-2' onClick={() => append({id:crypto.randomUUID(),description:'',probability:0,costImpact:0,mitigations:''})}><Plus className='mr-1 h-4 w-4'/>Add risk</Button><div className='mt-6 flex justify-end gap-8'><div className='text-right'><p className='text-sm text-muted-foreground'>Total Exposure</p><p className='text-lg font-semibold'>{formatCurrency(totalExposure)}</p></div><div className='text-right'><p className='text-sm text-muted-foreground'>Percentage Cost Exposure</p><p className='text-lg font-semibold'>{estimatesTotalCost ? `${(totalExposure/estimatesTotalCost*100).toFixed(2)}%` : '0.00%'}</p></div></div></div>;
+}
