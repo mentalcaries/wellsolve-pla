@@ -54,7 +54,7 @@ export const monitoringEntries: MonitoringEntry[] = [
 ];
 
 export const activeMitigation = {
-  id: 'mitigation-1', dateOfFailure: '2026-10-01', failureIdentified: 'Wellhead valve integrity restriction affecting oil and gas production.', remedialAction: 'Implementation in 0 to 3 Months', reportId: 'report-1',
+  id: 'mitigation-1', dateOfFailure: '2026-10-01', failureIdentified: 'Wellhead valve integrity restriction affecting oil, condensate, and gas production.', remedialAction: 'Implementation in 0 to 3 Months', reportId: 'report-1',
   notes: [{ id: 'note-1', content: 'Replacement valve and intervention services requested.', noteDate: '2026-10-10', mitigationStatus: 'Implementation in 0 to 3 Months', authorName: 'Devin James' }],
 };
 

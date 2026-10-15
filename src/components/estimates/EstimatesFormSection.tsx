@@ -10,7 +10,7 @@ import { ProjectedProductionLoss, type ProductionLossTotals } from './ProjectedP
 import { Button } from './ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
-const emptyProductionLoss: ProductionLossTotals = { total: 0, dailyAvoidedLoss: 0, oilPrice: 60, gasPrice: 3.25 };
+const emptyProductionLoss: ProductionLossTotals = { total: 0, dailyAvoidedLoss: 0, oilPrice: 60, condensatePrice: 55, gasPrice: 0.00325 };
 
 export function EstimatesFormSection() {
   const { control } = useFormContext<EstimatesFormValues>();
@@ -26,8 +26,8 @@ export function EstimatesFormSection() {
     <div className='my-3'><h2 className='text-lg font-semibold'>Estimated Costs</h2><p className='font-light'>Calculate the estimated costs and duration of proposed solutions.</p></div>
     {estimates.map((category,index)=><CategoryTable key={category.name} category={category} categoryIndex={index} totalCost={totalCost} isExpanded={expanded[index]??false} onToggle={()=>setExpanded(current=>({...current,[index]:!current[index]}))}/>)}
     <div className='mt-8 text-right'><h3 className='text-xl font-semibold'>Final Total (USD)</h3><p className='text-2xl font-bold'>{formatCurrency(totalCost)}</p></div>
-    <ProjectedProductionLoss onChange={updateProductionLoss}/>
     <CostContingency estimatesTotalCost={totalCost} onExposureChange={updateContingency}/>
+    <ProjectedProductionLoss onChange={updateProductionLoss}/>
     <EconomicImpactSummary interventionCost={totalCost} contingency={contingency} productionLoss={productionLoss}/>
     <section className='mt-8 rounded-lg border border-border bg-[#fbfcfe] p-5'><h2 className='text-xl font-semibold'>Assessment Summary</h2><p className='mt-1 font-light'>The completed report summary will include intervention cost, projected production loss, economic impact, and recovery assumptions.</p><Button type='button' className='mt-4'>Generate Summary</Button></section>
   </div>;
