@@ -5,7 +5,7 @@ import { Button, Field, Modal } from './ui';
 
 export function AddWellDialog({ onClose, onBaseline, onStatus }: { onClose: () => void; onBaseline: (streams: ProductionStream[]) => void; onStatus: () => void }) {
   const [productionEnabled, setProductionEnabled] = useState(true);
-  const [streams, setStreams] = useState<ProductionStream[]>(['oil', 'gas']);
+  const [streams, setStreams] = useState<ProductionStream[]>(['oil', 'condensate', 'gas']);
   const [complete, setComplete] = useState(false);
   const toggle = (stream: ProductionStream) => setStreams(current => current.includes(stream) ? current.filter(value => value !== stream) : [...current, stream]);
 
@@ -32,12 +32,12 @@ export function AddWellDialog({ onClose, onBaseline, onStatus }: { onClose: () =
         </div>
         <Field label='Monitoring frequency'><select defaultValue='Monthly'><option>Weekly</option><option>Monthly</option><option>Quarterly</option></select></Field>
         <div className='divider' />
-        <div className='toggle-heading'><div><h3>Production tracking</h3><span>Optional</span></div><label className='switch'><input type='checkbox' checked={productionEnabled} onChange={event => setProductionEnabled(event.target.checked)} /><span /></label></div>
+        <div className='toggle-heading'><div><h3>Production Impact Tracking</h3><span>Optional</span></div><label className='switch'><input type='checkbox' checked={productionEnabled} onChange={event => setProductionEnabled(event.target.checked)} /><span /></label></div>
         {productionEnabled && <div className='production-options'>
           <p>Select the production recorded for this well.</p>
-          <div className='stream-options'><button type='button' className={streams.includes('oil') ? 'stream selected' : 'stream'} onClick={() => toggle('oil')}><Check size={14} /> Oil</button><button type='button' className={streams.includes('gas') ? 'stream selected' : 'stream'} onClick={() => toggle('gas')}><Check size={14} /> Natural gas</button></div>
-          <div className='info-neutral'><Info size={15} /><div><strong>Standard input units</strong><span>Oil: bbl/day · Natural gas: Mscf/day at standard conditions</span></div></div>
-          {streams.length === 0 && <p className='field-error'>Select Oil, Natural gas, or turn off production tracking.</p>}
+          <div className='stream-options'><button type='button' className={streams.includes('oil') ? 'stream selected' : 'stream'} onClick={() => toggle('oil')}><Check size={14} /> Oil</button><button type='button' className={streams.includes('condensate') ? 'stream selected' : 'stream'} onClick={() => toggle('condensate')}><Check size={14} /> Condensate</button><button type='button' className={streams.includes('gas') ? 'stream selected' : 'stream'} onClick={() => toggle('gas')}><Check size={14} /> Natural gas</button></div>
+          <div className='info-neutral'><Info size={15} /><div><strong>Standard input units</strong><span>Oil and condensate: bbl/day · Natural gas: Scf/day at standard conditions</span></div></div>
+          {streams.length === 0 && <p className='field-error'>Select Oil, Condensate, Natural gas, or turn off production tracking.</p>}
         </div>}
         <Field label='Well schematic' hint='Optional'><button type='button' className='dropzone'><Upload size={16} /> Choose a PNG, JPEG, WebP, or PDF up to 5 MB</button></Field>
         <footer className='modal-actions'><Button type='button' variant='secondary' onClick={onClose}>Cancel</Button><Button type='submit'>Continue</Button></footer>
